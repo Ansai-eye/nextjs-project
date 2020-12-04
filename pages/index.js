@@ -13,7 +13,6 @@ const PostLink = (props) => {
 };
 
 const Index = (props) => {
-  debugger
   return (
     <Layout>
       <h1>Batman TV Shows</h1>
