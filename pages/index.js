@@ -1,5 +1,6 @@
 import Layout from '../components/MyLayout';
 import Link from 'next/link';
+import fetch from 'isomorphic-unfetch';
 
 const PostLink = (props) => {
   return (
@@ -11,33 +12,35 @@ const PostLink = (props) => {
   );
 };
 
-const Index = () => {
-  const posts = [
-    {
-      id: 'hello-nextjs',
-      title: 'Hello Next.js'
-    },
-    {
-      id: 'learn-nextjs',
-      title: 'Learn Next.js is awsome'
-    },
-    {
-      id: 'deploy-nextjs',
-      title: 'Deploy apps with Zeit'
-    }
-  ];
+const Index = (props) => {
+  debugger
   return (
     <Layout>
-      <h1>My Blog</h1>
+      <h1>Batman TV Shows</h1>
       <ul>
         {
-          posts.map(post => {
-            return <PostLink key={post.id} id={post.id} title={post.title}></PostLink>
+          props.shows.map(showInfo => {
+            let show = showInfo.show;
+            return <li key={show.id}>
+              <Link as={`/p/${show.id}`} href={`/post?id=${show.id}`}>
+                <a>{show.name}</a>
+              </Link>
+            </li>
           })
         }
       </ul>
     </Layout>
   );
+}
+
+Index.getInitialProps = async function () {
+  const res = await fetch('http://api.tvmaze.com/search/shows?q=batman');
+  const data = await res.json();
+
+  console.log(`show data fetched. Count: ${data.length}`);
+  return {
+    shows: data
+  }
 }
 
 export default Index;
